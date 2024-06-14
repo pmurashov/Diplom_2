@@ -1,44 +1,16 @@
 import allure
+
 from helpers import *
 
 
 class CreateUser:
     @staticmethod
-    @allure.step('Передача данных без пароля')
-    def data_without_password():
+    @allure.step("Передача данных пользователя")
+    def generate_user_data(email=fake.email(), password=fake.password(length=10), name=fake.first_name()):
         payload = {
-            'email': fake.email(),
-            'password': [],
-            'name': fake.first_name()
-        }
-        return payload
-
-    @staticmethod
-    @allure.step('Передача данных без поля Email')
-    def data_without_login():
-        payload = {
-            'email': [],
-            'password': fake.password(length=10),
-            'name': fake.first_name()
-        }
-        return payload
-
-    @staticmethod
-    @allure.step('Передача данных без имени')
-    def data_without_name():
-        payload = {
-            'email': fake.email(),
-            'password': fake.password(length=10),
-            'name': []
-        }
-        return payload
-
-    @allure.step('Передача данных с уникальными значениями во всех полях')
-    def data_login_success(self):
-        payload = {
-            'email': fake.email(),
-            'password': fake.password(length=10),
-            'name': fake.first_name()
+            'email': email,
+            'password': password,
+            'name': name
         }
         return payload
 

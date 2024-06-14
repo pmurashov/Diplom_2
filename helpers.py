@@ -1,12 +1,15 @@
-import random
+import allure
 import pytest
+import random
 import requests
 from faker import Faker
+
 from urls import *
 
 fake = Faker(locale="ru_RU")
 
 
+@allure.step("Регистрация пользователя и получение данных для входа")
 def register_new_user_and_get_credentials() -> list:
     login_pass = []
     payload = {
@@ -22,6 +25,7 @@ def register_new_user_and_get_credentials() -> list:
     return login_pass
 
 
+@allure.step("Получение токена")
 def get_token():
     data = register_new_user_and_get_credentials()
     payload = {
@@ -34,6 +38,7 @@ def get_token():
         pytest.xfail(reason=f'Не удалось получить токен\n{response_post.json()}')
 
 
+@allure.step("Получение данных ингредиентов")
 def get_ingredient_data():
     hash_ingredients = []
     response_get = requests.get(GET_INGREDIENTS_DATA, headers={'Authorization': f'{get_token()}'})
@@ -43,6 +48,7 @@ def get_ingredient_data():
     return hash_ingredients
 
 
+@allure.step("Генерация произвольного номера")
 def generate_number():
     ramdom_number = ''
     for x in range(8):

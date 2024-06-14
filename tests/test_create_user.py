@@ -1,6 +1,7 @@
 import allure
-import requests
 import pytest
+import requests
+
 from base.create_user import CreateUser
 from urls import *
 
@@ -11,7 +12,7 @@ class TestCreateUser:
     @allure.title('Успешное создание пользователя')
     def test_create_user_success(self):
         create_user = CreateUser()
-        payload = create_user.data_login_success()
+        payload = create_user.generate_user_data()
         response_post = requests.post(CREATE_USER, data=payload)
         assert response_post.status_code == 200 and '"success":true' in response_post.text
 
@@ -25,9 +26,9 @@ class TestCreateUser:
                 response_post.json()['message'] == 'User already exists')
 
     @allure.title('Проверка обязательных полей для создания пользователя')
-    @pytest.mark.parametrize('payload', [create_user.data_without_password(),
-                                         create_user.data_without_login(),
-                                         create_user.data_without_name()])
+    @pytest.mark.parametrize('payload', [create_user.generate_user_data(password=[]),
+                                         create_user.generate_user_data(email=[]),
+                                         create_user.generate_user_data(name=[])])
     def test_create_user_without_password_or_login_or_name(self, payload):
         response_post = requests.post(CREATE_USER, data=payload)
         assert (response_post.status_code == 403 and
